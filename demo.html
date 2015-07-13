@@ -1,0 +1,57 @@
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+
+<script>
+    $(function ()
+        {
+            //general jQ callback onerror (if image doesnt exist) on edit (aka line 36)
+            $("#product_drop_fl_image").error(function() {
+              this.src = 'prod_img/404.jpg'; // replace with default image
+            });
+ 
+            $("#product_drop_fl").upload({
+                single: 1,
+                overwrite : 1,
+                completed : function(e) {
+                    $("#product_drop_fl_image").attr("src",e+"?" + new Date().getTime()); //avoid image cache (aka the image doesnt updated)
+                },
+                error : function(){
+                    $("#product_drop_fl_image").attr("src","prod_img/404.jpg");
+                }
+            });
+    });
+ 
+    //edit button - read record
+    function query_PRODUCTS_modal(rec_id){
+        loading.appendTo(document.body);
+ 
+        $.ajax(
+        {
+            url : "tab_products_fetch.php",
+            type: "POST",
+            data : { product_id : rec_id },
+            success:function(data, textStatus, jqXHR)
+            {
+                loading.remove();
+ 
+                if (data!='null')
+                {
+                    $("#product_drop_fl_image").attr("src","prod_img/" + data.product_sku + ".jpg");
+                    $("#product_drop_fl_zone").data("filename",data.product_sku + ".jpg");
+                }
+            }
+        });
+    });
+ 
+</script>
+ 
+<div>
+    <img id="product_drop_fl_image" src="prod_img/404.jpg" style="float:right;" width="60px" height="60px">
+ 
+    <span class="btn btn-primary btn-file" id="product_drop_fl_zone" data-filename="0.jpg">
+        Browse or Drop an Image file <input type="file" id="product_drop_fl" multiple>
+    </span>
+    <br/>
+    <div id="product_drop_fl_list"></div>
+</div>
