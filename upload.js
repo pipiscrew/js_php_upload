@@ -9,6 +9,7 @@ $.fn.upload = function(options ) {
     var file_element="#"+this.attr('id');
     var drop_element="#"+this.attr('id')+"_zone";
     var drop_list="#"+this.attr('id')+"_list";
+    var drop_img="#"+this.attr('id')+"_image";
  
     //enable dataTransfer property
     //http://stackoverflow.com/a/14792183/1320686
@@ -17,11 +18,19 @@ $.fn.upload = function(options ) {
  
     //return this.each( function() {
 
-        //the event of file:input control (change) fire when 'browse for file' or 'drop files'
-        $( this ).change(function (){
-            var files = $(this).prop("files")
-            handleFileSelect(files, true);
-        }); 
+    //the event of file:input control (change) fire when 'browse for file' or 'drop files'
+    $( this ).change(function (){
+        var files = $(this).prop("files")
+        handleFileSelect(files, true);
+    }); 
+        
+    $.fn.reset = function() {
+		$(drop_list).html('');
+		$(drop_element).data("filename", "0.jpg");
+		//https://css-tricks.com/snippets/jquery/clear-a-file-input/#comment-534596
+		$(file_element).val('') ;
+		$(drop_img).attr("src","x/x.jpg"); //due jQ onerror restore the 404 :)
+    };
  
     //plugin method (aka .refresh())
     $.fn.reset = function() {
@@ -118,7 +127,7 @@ $.fn.upload = function(options ) {
         // jQ ajax internally uses XMLHttpRequest
         // prepare XMLHttpRequest
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', "upload.php");
+        xhr.open('POST', opts.upload_script); //"upload.php");
         xhr.setRequestHeader("X-File-Pos", array_pos);
         xhr.setRequestHeader("X-File-Name", ftp_filename);
  
@@ -168,6 +177,7 @@ $.fn.upload = function(options ) {
         ftp_filename: 0,
         completed : null,
         error : null,
+        upload_script : 'upload.php',
     };
 } 
 })( jQuery );
