@@ -5,21 +5,28 @@
 <script>
     $(function ()
         {
-            //general jQ callback onerror (if image doesnt exist) on edit (aka line 36)
+            //general jQ callback onerror (if image doesnt exist) on edit
             $("#product_drop_fl_image").error(function() {
               this.src = 'prod_img/404.jpg'; // replace with default image
             });
  
-            $("#product_drop_fl").upload({
-                single: 1,
-                overwrite : 1,
-                completed : function(e) {
-                    $("#product_drop_fl_image").attr("src",e+"?" + new Date().getTime()); //avoid image cache (aka the image doesnt updated)
-                },
-                error : function(){
-                    $("#product_drop_fl_image").attr("src","prod_img/404.jpg");
-                }
-            });
+	        $("#product_drop_fl").upload({
+	        	upload_script : 'upload_product.php',
+	            single: 1,
+	            overwrite : 1,
+	            completed : function(e) {
+	                $("#product_drop_fl_image").attr("src",e+"?" + new Date().getTime()); //avoid image cache (aka the image doesnt updated)
+	            },
+	            error : function(){
+	                $("#product_drop_fl_image").attr("src","../product_img/404.jpg");
+	            }
+	        });
+	        
+	        //modal event - when close hide&reset the upload ctl
+		    $('#modalEVENT_SPONSORS').on('hidden.bs.modal', function() {
+		 		$("#sponsor_image_div").hide();
+				$("#sponsor_drop_fl_zone").reset();
+		    });
     });
  
     //edit button - read record
@@ -37,8 +44,12 @@
  
                 if (data!='null')
                 {
-                    $("#product_drop_fl_image").attr("src","prod_img/" + data.product_sku + ".jpg");
-                    $("#product_drop_fl_zone").data("filename",data.product_sku + ".jpg");
+					//thumb
+					$("#product_drop_fl_image").attr("src","../product_img/" + data.event_product_id + ".jpg");
+					$("#product_drop_fl_zone").data("filename", data.event_product_id + ".jpg");
+					
+					$("#product_image_div").show();	 	
+					//thumb
                 }
             }
         });
