@@ -1,4 +1,4 @@
 # js_php_upload
 jQuery Upload Helper 
 
-upload simplied
+upload simplified
