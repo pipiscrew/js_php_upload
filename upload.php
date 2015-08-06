@@ -15,6 +15,13 @@ $overwrite = $_POST["overwrite"];
 //["tmp_name"]=> string(18) "/var/tmp/php7HREDP"
 //["error"]=> int(0) ["size"]=> int(15229) } }
  
+ //If you want to be sure that an image was uploaded, use getimagesize, that returns 0 for non-images.
+//http://stackoverflow.com/a/15605087
+//	if (getimagesize($_FILES["myfile"]["tmp_name"])==0){
+//	    echo json_encode(array("filename"=>$target_file,"msg"=>"Sorry, there was an error uploading your file.","err"=>2));
+//	    exit;
+//	}
+
     $target_dir = "prod_img/";
     $target_file = $target_dir . $filename;//. basename($_FILES["myfile"]["name"]);
  
